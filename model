@@ -38,7 +38,6 @@ class CausalSelfAttention(nn.Module):
 
 
 class Block(nn.Module):
-    """ an unassuming Transformer block """
 
     def __init__(self, config):
         super().__init__()
@@ -108,15 +107,11 @@ class SeaKSformer(nn.Module):
             self.lon_range = config.lon_max - config.lon_min
             self.sog_range = 30.
 
-        if hasattr(config, "mode"):  # mode: "pos" or "velo".
-            # "pos": predict directly the next positions.
-            # "velo": predict the velocities, use them to
-            # calculate the next positions.
+        if hasattr(config, "mode"):  
             self.mode = config.mode
         else:
             self.mode = "pos"
 
-        # Passing from the 4-D space to a high-dimentional space
         self.lat_emb = nn.Embedding(self.lat_size, config.n_lat_embd)
         self.lon_emb = nn.Embedding(self.lon_size, config.n_lon_embd)
         self.sog_emb = nn.Embedding(self.sog_size, config.n_sog_embd)
@@ -125,6 +120,5 @@ class SeaKSformer(nn.Module):
         self.pos_emb = nn.Parameter(torch.zeros(1, config.max_seqlen, config.n_embd))
         self.drop = nn.Dropout(config.embd_pdrop)
 
-        # transformer
         self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
 
