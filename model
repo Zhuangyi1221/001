@@ -119,6 +119,5 @@ class SeaKSformer(nn.Module):
 
         self.pos_emb = nn.Parameter(torch.zeros(1, config.max_seqlen, config.n_embd))
         self.drop = nn.Dropout(config.embd_pdrop)
-
         self.blocks = nn.Sequential(*[Block(config) for _ in range(config.n_layer)])
 
